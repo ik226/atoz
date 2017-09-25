@@ -1,0 +1,120 @@
+
+.App {
+  //text-align: center;
+}
+
+.App-logo {
+  animation: App-logo-spin infinite 20s linear;
+  height: 80px;
+}
+
+.App-header {
+  background-color: #222;
+  height: 120px;
+  padding: 10px;
+  color: white;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.App-header > img {
+  display: none;
+}
+
+.App-intro {
+  text-align: center;
+  font-size: large;
+}
+
+.App-map {
+  
+}
+
+.all-container {
+  height: 100%;
+  width: 100%;
+}
+/* map container style*/
+.map-container {
+  height: 75vh;
+  width: 300px;
+  float: left;
+  margin-left: 40px;
+  //position: absolute;
+}
+
+/* Upload Popup style */
+.upload-div {
+  position: relative;
+
+  height: 100px;
+  width: 100px;
+  cursor: pointer;
+  border-radius: 5px;
+  background: #ffffff;
+  padding-top: 2px;
+  text-align: center;
+}
+
+.upload-content{
+  margin-top: 20px;
+}
+
+.upload-button {
+  position: relative;
+  margin-top: 10px;
+  text-align: center;
+  width: 80%;
+  background-color: #d0f481;
+  border-radius: 2px;
+  border: none;
+
+
+}
+
+.upload-close-btn{
+  position:absolute;
+  right:2px;
+}
+
+.upload-form{
+  position:absolute;
+  z-index: 10;
+  left: 380px;
+  float:right;
+  text-align: center;
+  background-color: rgba(255,255,255, 0.8);
+  width: 300px;
+  height: 200px;
+  border: 1px solid black;
+
+}
+
+.upload-form-close-btn{
+  position:absolute;
+  right:2px;
+}
+
+
+
+/* left nav bar */
+.aside-nav {
+  width: 40px;
+  //position: absolute;
+  left: 0px;
+  margin-left: 20px;
+}
+.aside-nav .aside-nav-index {
+  list-style-type: none;
+  margin: 10px 0px;
+
+}
+.aside-nav .aside-nav-index > span {
+  border: 1px solid black;
+  padding-right: 20px;
+}
+
+@keyframes App-logo-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}

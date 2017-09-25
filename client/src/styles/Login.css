@@ -1,0 +1,12 @@
+/* Login form style*/
+
+.login-form {
+  z-index: 1000;
+  position: fixed;
+  margin: 0 100px;
+  padding: 0 15px;
+}
+
+.padding-15{
+  padding: 15px;
+}
