@@ -93,7 +93,7 @@ function postPhotosRequestApi(markerId, fileData){
       }
     }
     //TODO: it works if only send formData alone, but not with other data
-    axios.post('http://localhost:3000/api/images', formdata, config)
+    axios.post('api/images', formdata, config)
       .then(response => {
 
         Promise.all([

@@ -19,7 +19,7 @@ const reducer = asyncInitialState.outerReducer(combineReducers(
 const loadStore = (currentState) => {
   console.log(currentState);
   return new Promise((resolve, reject) => {
-    axios.get('http://localhost:3000/api/markers')
+    axios.get('/api/markers')
       .then(response => {
         console.log(response);
         resolve(batchSetMarkers(currentState, response.data));

@@ -13,6 +13,7 @@ import { UploadFormContainer } from './UploadForm';
 import { Gallery } from './Gallery';
 import { PostLoadingIndicator } from './PostLoadingIndicator';
 import { AsideNav } from './AsideNav';
+import { Minimap } from './Minimap';
 
 //action
 import * as actionCreators from '../actionCreators';
@@ -63,10 +64,7 @@ export class MapController extends Component {
   }
 
   componentDidMount(){
-
-    /*
     //direction service test
-
     const DirectionsService = new window.google.maps.DirectionsService();
     const _origin = new window.google.maps.LatLng(41.05579642354099, -73.86125564575195);
     const _destination = new window.google.maps.LatLng(40.706, -74.014);
@@ -83,8 +81,32 @@ export class MapController extends Component {
         console.log('error get direction service');
       }
     });
-    */
+
+    //TODO: scope needs to be only applied to MapController,
+    //      currently it applies to every DOM element in the window
+    //add scrolll event listener to window
+    window.addEventListener('wheel', e => this.mouseScrollController(e));
+
   }
+
+  compoenentWillUnmount(){
+    window.removeEventListener('wheel')
+  }
+
+  mouseScrollController(e){
+    e.preventDefault()
+    var dir = e.deltaY > 0 ? 'up' : 'down'
+    switch(dir){
+      case 'up':
+        this.moveTravelerUp()
+        return
+      case 'down':
+        this.moveTravelerDown()
+        return
+      return
+    }
+  }
+
   //open upload form
   handleOpenUploadForm(marker){
 
@@ -108,16 +130,16 @@ export class MapController extends Component {
     //console.log(this.state.currentTravelerLoc)
 
     this.setState(prevState => {
-      let iconLoc = getIconLocation(prevState.currentTravelerLoc + 2);
+      let iconLoc = getIconLocation(prevState.currentTravelerLoc + 0.5);
       getNearestMarker(
         iconLoc,
         this.props.markers,
         this.props.handleMarkerClick,
         this.props.handleMarkerClose
       );
-      if(prevState.currentTravelerLoc + 2 < 100){
+      if(prevState.currentTravelerLoc + 0.5 < 100){
        return {
-         currentTravelerLoc: prevState.currentTravelerLoc + 2,
+         currentTravelerLoc: prevState.currentTravelerLoc + 0.5,
          defaultCenter: iconLoc
        }
       }
@@ -130,16 +152,16 @@ export class MapController extends Component {
     //console.log(this.state.currentTravelerLoc)
 
       this.setState(prevState => {
-        let iconLoc = getIconLocation(prevState.currentTravelerLoc - 2);
+        let iconLoc = getIconLocation(prevState.currentTravelerLoc - 0.5);
         getNearestMarker(
           iconLoc,
           this.props.markers,
           this.props.handleMarkerClick,
           this.props.handleMarkerClose
         );
-        if(prevState.currentTravelerLoc - 2 > 0){
+        if(prevState.currentTravelerLoc - 0.5 > 0){
           return {
-            currentTravelerLoc: prevState.currentTravelerLoc - 2,
+            currentTravelerLoc: prevState.currentTravelerLoc - 0.5,
             defaultCenter: iconLoc
           }
         }
@@ -170,7 +192,7 @@ export class MapController extends Component {
             <div style={{ height: '100%', width: '100%' }} />
           }
           center={this.state.defaultCenter}
-          directions={this.state.directions}
+
 
           linePath={longJourney}
           currentLoc={this.state.currentTravelerLoc + '%'}
@@ -181,6 +203,7 @@ export class MapController extends Component {
           onMarkerClose={this.props.handleMarkerClose}
           handleButtonToRemoveMarker={this.props.handleButtonToRemoveMarker}
           openForm={this.handleOpenUploadForm}
+
         >
       </BroadwayMap>
 
@@ -198,6 +221,21 @@ export class MapController extends Component {
           handleDeletePhoto={this.props.handleDeletePhoto}
           />
 
+        <Minimap
+          containerElement = {
+            <div style={{
+                height: "250px",
+                width: "100px",
+                position: "absolute",
+                bottom: "15px",
+                left: "15px"
+               }} />
+          }
+          mapElement = {
+            <div style={{ height: '100%', width: '100%' }} />
+          }
+          directions={this.state.directions}
+          />
 
         <div className="container"
           style={{width: '40px', position: 'fixed', right: '20px', "margin-top":"50px"}}>
@@ -263,7 +301,7 @@ function postMarkerRequestApi(position){
 
   return (dispatch) => {
     dispatch(actionCreators.postMarker());
-    axios.post('http://localhost:3000/api/markers', {
+    axios.post('/api/markers', {
           position: position,
           id: id
     })
@@ -285,7 +323,7 @@ function deleteMarkerRequestApi(id){
     //dispatch(actionCreators.postMarker());
     axios({
       method: 'DELETE',
-      url: 'http://localhost:3000/api/markers',
+      url: '/api/markers',
       data: {id: id}
      })
     .then(response => {
@@ -315,7 +353,7 @@ function deleteMarkerRequestApi(id){
 function getMarkersRequestApi(){
   return (dispatch) => {
     dispatch(actionCreators.fetchRequest());
-    axios.get('http://localhost:3000/api/markers')
+    axios.get('/api/markers')
       .then(response => {
         console.log(response);
         //dispatch(actionCreators.fetchSuccess(response))
@@ -332,7 +370,7 @@ function deletePhotoRequestApi(photoId){
     dispatch({type:"delete_photo_temp"});
     axios({
       method: 'DELETE',
-      url: 'http://localhost:3000/api/images',
+      url: '/api/images',
       data: {id: photoId}
      })
     .then(response => {

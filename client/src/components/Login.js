@@ -46,7 +46,7 @@ class Login extends Component {
     let status = st ? "Don't have ID? " : "Already a member? ";
     return (
 
-        <div className="login-form jumbotron container">
+        <div className="login-form modal container">
           <div className="row padding-15">
             <div className="col-8">
             <button type="button" className="close"
@@ -100,7 +100,7 @@ function loginRequestApi(input){
     console.log(typeof input)
     //TODO: do dispatch action of starting request
     //dispatch(actionCreators.startLogin)
-    axios.post('http://localhost:3000/auth/login', input)
+    axios.post('/auth/login', input)
       .then(response => {
         if(response.status === 200){
           //TODO:
@@ -118,7 +118,7 @@ function loginRequestApi(input){
 function signInRequestApi(input){
   return dispatch => {
     console.log(input);
-    axios.post('http://localhost:3000/auth/signup', input)
+    axios.post('/auth/signup', input)
       .then(response => {
         if(response.status === 200){
           console.log(response);

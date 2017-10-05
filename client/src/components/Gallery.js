@@ -5,17 +5,19 @@ export function Gallery(props){
 
   if(props.current!=null){
     const pList = props.current;
-    console.log(pList)
+    /*
     if(!pList.size){
       return(
       <div className="gallery-no-post">
         <p>No posts yet. Please upload</p>
-      </div>)
-    }
+      </
+      */
+    const noPost = (<p>No posts yet. Please upload</p>)
+
     //var pList = props.current.toIndexedSeq().toArray();
     //console.log(pList[0].get('path'))
     const imageList = pList.map((image) => (
-        <li style={{listStyleType: 'none', margin: "20px 0"}}
+        <li style={{listStyleType: "none", margin: "10px 0"}}
           key={image}>
           <img src={'/tempImg/'+image} className="image"
             style={{ width: "300px"}}/>
@@ -33,9 +35,9 @@ export function Gallery(props){
 
 
         <div className="gallery-container container">
-          <ul>
-          {imageList}
-          </ul>
+
+          {pList===0 ? {noPost} : <ul style={{padding:0}}>{imageList}</ul>}
+
         </div>
 
     );

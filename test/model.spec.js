@@ -9,6 +9,7 @@ var PhotoController = require('../controller/photo');
 var MarkerController = require('../controller/marker');
 
 var expect = chai.expect;
+var asser = chai.assert;
 
 describe('model consistency when controller applied', () => {
   describe('delete', () => {
@@ -71,5 +72,6 @@ describe('model consistency when controller applied', () => {
     });
 
   });
+
 
 });

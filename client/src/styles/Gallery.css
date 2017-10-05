@@ -2,13 +2,14 @@
 
 .gallery-container{
   position: absolute;
-  left: 380px;
-  margin-left: 40px;
-  width: 500px;
+  top: 100px;
+  right: 20px;
+  //margin-left: 40px;
+  width: 350px;
   height: 75vh;
   background-color: #ff0000;
   overflow-y: scroll;
-  float: left;
+  //float: left;
   text-align: center;
 }
 

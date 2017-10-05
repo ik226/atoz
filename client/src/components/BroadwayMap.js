@@ -21,7 +21,8 @@ export const BroadwayMap = withGoogleMap(props => (
       styles: MapStyles,
       mapTypeControl: false,
       streetViewControl: false,
-      fullscreenControl: false
+      fullscreenControl: false,
+      gestureHandling: 'none'
     }}
 
     onClick={e => {
@@ -29,6 +30,8 @@ export const BroadwayMap = withGoogleMap(props => (
         {lat: e.latLng.lat(), lng: e.latLng.lng()}
       )
     }}
+
+    onWheel={e => {console.log(e)}}
   >
     <Polyline
       path={props.linePath}

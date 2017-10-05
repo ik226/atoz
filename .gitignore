@@ -6,3 +6,6 @@ temp_image_dir
 
 #misc
 .DS_Store
+
+#env file
+.env
