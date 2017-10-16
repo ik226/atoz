@@ -8,15 +8,12 @@ var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
 var morgan = require('morgan');
 var flash = require('connect-flash');
-
 var passport = require('passport');
 
 var expressSession = require('express-session');
-//var User = require('./models/UserModel');
-
 
 var initPassport = require('./routes/passport/init');
-//console.log(initPassport)
+
 initPassport(passport);
 
 var routes = require('./routes/routes');
@@ -26,7 +23,7 @@ var app = express();
 
 var PORT = process.env.PORT || 3001;
 
-//app.use(expressSession({secret: 'mySecretKey'}));
+app.use(expressSession({secret: 'mySecretKey'}));
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -36,6 +33,8 @@ app.use(flash());
 
 app.use('/api', routes);
 app.use('/auth', login);
+
+
 
 app.use('/tempImg', express.static(__dirname + '/temp_image_dir'));
 

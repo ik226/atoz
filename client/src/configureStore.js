@@ -6,19 +6,22 @@ import axios from 'axios';
 import { Map, fromJS } from 'immutable';
 
 import { markerReducer } from './reducers/markers';
+import { loginReducer } from './reducers/login';
 import * as actionCreators from './actionCreators';
 import { batchSetMarkers } from './actions/actions';
 
 const reducer = asyncInitialState.outerReducer(combineReducers(
   {
     data: markerReducer,
+    login: loginReducer,
     asyncInitialState: asyncInitialState.innerReducer
   }
 ));
 
 const loadStore = (currentState) => {
-  console.log(currentState);
   return new Promise((resolve, reject) => {
+    //TODO: initial loading time extenstion for test
+    setTimeout(function(){
     axios.get('/api/markers')
       .then(response => {
         console.log(response);
@@ -28,7 +31,7 @@ const loadStore = (currentState) => {
       .catch(err => {
         reject(console.log('server is not responding'))
       })
-
+    }, 5000)
   });
 }
 
@@ -45,10 +48,9 @@ export const configureStore = () => {
   const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
   const store = createStore(
-    //markerReducer,
     reducer,
     composeEnhancers(applyMiddleware(...middlewares)),
-
   );
+
   return store;
 };

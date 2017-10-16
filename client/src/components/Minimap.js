@@ -14,14 +14,12 @@ export const Minimap = withGoogleMap(props => (
     defaultZoom={10}
     defaultCenter={{lat: 40.81173, lng: -73.960648}}
     defaultOptions={{
-
       mapTypeControl: false,
       streetViewControl: false,
       fullscreenControl: false,
-
     }}
 
   >
-  {props.directions && <DirectionsRenderer directions={props.directions}/>}
+  { props.directions && <DirectionsRenderer directions={props.directions}/> }
   </GoogleMap>
 ));

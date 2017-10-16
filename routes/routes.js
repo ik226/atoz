@@ -11,11 +11,11 @@ var PhotoController = require('../controller/photo');
 var MarkerController = require('../controller/marker');
 
 
+
 //get markers from DB
 //TODO: get all the photos and send as response
 //      might require async waterfall
 router.get('/markers', function(req, res){
-
   async.waterfall([
     //get marker data from db
     function(callback){
@@ -53,7 +53,7 @@ router.get('/markers', function(req, res){
 });
 
 //post markers to DB so that creates new marker
-router.post('/markers', function(req, res){
+router.post('/markers', isAuthenticated(), function(req, res){
 
   var position = req.body.position,
       id = req.body.id,
@@ -224,5 +224,10 @@ router.get('/images', function(req, res){
     .then(photo => { res.status(200).json(photo) })
     .catch(err => { res.status(500).send(err); });
 })
+
+function isAuthenticated(){ return function(req, res, next){
+  if(req.isAuthenticated()) return next();
+  console.log(req.isAuthenticated())}
+}
 
 module.exports = router;

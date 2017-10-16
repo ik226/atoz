@@ -23,6 +23,7 @@ import {
   uploadPhoto,
   uploadPhotoSuccess,
   uploadPhotoProgress,
+  uploadPhotoFailure,
   //map interaction handlers
   toggleMapIndex
 } from '../actions/actions';
@@ -75,7 +76,7 @@ export const markerReducer = (state = INITIAL_STATE, action) => {
     //======photo reducer======//
 
     case 'ADD_PHOTO':
-      return addPhoto(state, action.markerId, action.photoId);
+      return addPhoto(state, action.markerId, action.photoIds);
 
     case 'DELETE_PHOTO':
       return deletePhoto(state, action.photoId);
@@ -89,10 +90,15 @@ export const markerReducer = (state = INITIAL_STATE, action) => {
     case 'UPLOAD_PHOTO_SUCCESS':
       return uploadPhotoSuccess(state);
 
+    case 'UPLOAD_PHOTO_FAILURE':
+      return uploadPhotoFailure(state);
+
     //=========Map interaction========//
 
     case 'TOGGLE_MAP_INDEX':
       return toggleMapIndex(state, action.index);
+
+    default:
+      return state
   }
-  return state;
 }

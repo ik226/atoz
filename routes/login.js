@@ -6,12 +6,13 @@ var router = express.Router();
 module.exports = function(passport){
   router.post('/login', passport.authenticate('login', {
     //successRedirect: '/',
-    //failureRedirect: '/login',
+    //failureRedirect: '/',
     //failureFlash: true
   }),function(req, res){
     //console.log(user)
     //if(err ) res.statusCode(500).send('something wrong with login auth');
-    res.status(200).send();
+    //res.status(200).send();
+    res.redirect('/')
   });
 
   router.post('/signup', passport.authenticate('signup', {
@@ -26,6 +27,11 @@ module.exports = function(passport){
   //test
   router.get('/signup', function(req, res){
     res.send('route works..');
+  })
+
+  router.get('/logout', function(req, res){
+    req.logout();
+    res.send('logout successfully')
   })
 
 

@@ -18,6 +18,7 @@ export const INITIAL_STATE = Map()
   .set('photos', Map()) //TODO: its time for photo....
   .set('uploadingProgress', 0) //for photo uploading
   .set('uploading', false)
+  .set('uploadingSuccess', false)
   .set('currentDataForGallery', null) //for gallery to know what is the current marker
   .set('currentMapIndex', 'a'); //default center is index 'a'
 
@@ -48,10 +49,8 @@ export const batchSetMarkers = (state, response) => {
     }
   */
   if(!Object.keys(response).length){
-    console.log('no content in response')
     return state;
   }
-  //console.log(response)
 
   state.data = state.data.withMutations(state =>
     response.markers.forEach( marker => {
@@ -160,46 +159,50 @@ export const postMarker = (state) => {
   Photos
 */
 
-//TODO: set path to defaultPhoto
-export const addPhoto = (state, markerId, photoId) => {
-  const newPhoto = defaultPhoto
-    .set('marker', markerId).set('id',photoId);
-  //const photoIdList = fromJS(photoId);
-  const nextState = state.updateIn(
+//@param markerId {string}
+//@param photoId {[string]}
+export const addPhoto = (state, markerId, photoIds) => {
+  const newPhotoMapList = photoIds.map(photoId => {
+    return defaultPhoto
+      .set('marker', markerId)
+      .set('id', photoId);
+  })
+
+  const addPhoto = newPhotoMapList.reduce((prevState, newPhoto) => {
+    return prevState
+      .setIn(['photos', newPhoto.get('id')], newPhoto)
+  }, state)
+
+  const finalState = addPhoto.updateIn(
     ['markers', markerId, 'photos'],
-    photos => photos.concat(photoId));
-  const finalState = nextState
-    .setIn(['photos', photoId], newPhoto);
+    photos => photos.concat(photoIds))
+
+
   if(state.get('currentDataForGallery')){
     return finalState.update('currentDataForGallery',
-      currentDataForGallery => currentDataForGallery.concat(photoId));
+      currentDataForGallery => currentDataForGallery.concat(photoIds))
   }
 
-  return finalState;
+  return finalState
 }
 
 export const deletePhoto = (state, photoId) => {
   const markerId = state.getIn(["photos", photoId, "marker"]);
-  //console.log(markerId, photoId);
+
   const handlePhotoState = state.deleteIn(["photos", photoId]);
-  console.log(handlePhotoState);
+
   const filteredState = handlePhotoState.updateIn(["markers", markerId, "photos"],
     photos => photos.filter(ids => ids !== photoId));
 
-  //console.log(handlePhotoState)
-  //console.log(handlePhotoState.getIn(["markers", markerId, "photos"]));
-
   if(filteredState.get('currentDataForGallery')){
 
-    const finalState = filteredState.update('currentDataForGallery',
+    return filteredState.update('currentDataForGallery',
       currentDataForGallery =>
       currentDataForGallery.filter(id => id !== photoId)
-    );
-
-
-    return finalState;
+    )
   }
-  return filteredState;
+
+  return filteredState
 }
 
 export const uploadPhoto = (state) => {
@@ -211,7 +214,15 @@ export const uploadPhotoProgress = (state, progress) => {
 }
 
 export const uploadPhotoSuccess = (state) => {
-  return state.set('uploading', false).set('uploadingProgress', 0);
+  return state.set('uploading', false)
+    .set('uploadingProgress', 0)
+    .set('uploadingSuccess', true);
+}
+
+export const uploadPhotoFailure = (state) => {
+  return state.set('uploading', false)
+    .set('uploadingProgress', 0)
+    .set('uploadingSuccess', false)
 }
 
 /*

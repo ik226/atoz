@@ -9,10 +9,10 @@ import { v4 } from 'uuid';
 
 //components
 import { BroadwayMap } from './BroadwayMap';
-import { UploadFormContainer } from './UploadForm';
-import { Gallery } from './Gallery';
+import { UploadformContainer } from './Uploadform/UploadformContainer';
+import { Gallery } from './Gallery/Gallery';
 import { PostLoadingIndicator } from './PostLoadingIndicator';
-import { AsideNav } from './AsideNav';
+//import { AsideNav } from './AsideNav';
 import { Minimap } from './Minimap';
 
 //action
@@ -81,16 +81,12 @@ export class MapController extends Component {
         console.log('error get direction service');
       }
     });
-
-    //TODO: scope needs to be only applied to MapController,
-    //      currently it applies to every DOM element in the window
-    //add scrolll event listener to window
-    window.addEventListener('wheel', e => this.mouseScrollController(e));
-
   }
 
-  compoenentWillUnmount(){
-    window.removeEventListener('wheel')
+  componentWillReceiveProps(nextProps){
+    if (nextProps.uploadingSuccess && !nextProps.uploading){
+      this.handleCloseUploadForm()
+    }
   }
 
   mouseScrollController(e){
@@ -103,11 +99,13 @@ export class MapController extends Component {
       case 'down':
         this.moveTravelerDown()
         return
-      return
+      default:
+        return
     }
   }
 
   //open upload form
+  //TODO: do we need to set current marker to state??
   handleOpenUploadForm(marker){
 
     this.setState({showUploadForm: true});
@@ -127,8 +125,6 @@ export class MapController extends Component {
   //traveler controller
   //moves it downward
   moveTravelerDown(){
-    //console.log(this.state.currentTravelerLoc)
-
     this.setState(prevState => {
       let iconLoc = getIconLocation(prevState.currentTravelerLoc + 0.5);
       getNearestMarker(
@@ -149,8 +145,6 @@ export class MapController extends Component {
 
   //move it upward
   moveTravelerUp(){
-    //console.log(this.state.currentTravelerLoc)
-
       this.setState(prevState => {
         let iconLoc = getIconLocation(prevState.currentTravelerLoc - 0.5);
         getNearestMarker(
@@ -166,90 +160,80 @@ export class MapController extends Component {
           }
         }
       });
-
   }
-
-
 
   render(){
     //map center v1
     // center={mapCenters[this.props.currentMapIndex]}
-    /*
-    <AsideNav
-      className="col-1"
-      clickIndex={this.props.handleClickIndex} />
-      */
-    if(this.props.initStateLoaded === true && this.props.initStateLoading===false){
-    return (
 
-      <div className="row">
+    const handleMapClickWhenAuthed =
+      this.props.isAuthenticated ? this.props.handleMapClick : function(){};
 
-        <BroadwayMap
-          containerElement = {
-            <div className= "map-container col-4" />
-          }
-          mapElement = {
-            <div style={{ height: '100%', width: '100%' }} />
-          }
-          center={this.state.defaultCenter}
+    if(this.props.initStateLoaded === true && this.props.initStateLoading === false){
+      return (
+      <div>
+        <div className="row"
+             onWheel={e => this.mouseScrollController(e)}>
 
+          <BroadwayMap
+            containerElement = {
+              <div className= "map-container col-4" />
+            }
+            mapElement = {
+              <div style={{ height: '100%', width: '100%' }} />
+            }
+            center={this.state.defaultCenter}
 
-          linePath={longJourney}
-          currentLoc={this.state.currentTravelerLoc + '%'}
+            linePath={longJourney}
+            currentLoc={this.state.currentTravelerLoc + '%'}
 
-          onMapClick={this.props.handleMapClick}
-          markers={this.props.markers}
-          onMarkerClick={this.props.handleMarkerClick}
-          onMarkerClose={this.props.handleMarkerClose}
-          handleButtonToRemoveMarker={this.props.handleButtonToRemoveMarker}
-          openForm={this.handleOpenUploadForm}
+            onMapClick={handleMapClickWhenAuthed}
+            markers={this.props.markers}
+            onMarkerClick={this.props.handleMarkerClick}
+            onMarkerClose={this.props.handleMarkerClose}
+            handleButtonToRemoveMarker={this.props.handleButtonToRemoveMarker}
+            openForm={this.handleOpenUploadForm}
 
-        >
-      </BroadwayMap>
+            isAuthenticated={this.props.isAuthenticated}
 
-        <UploadFormContainer
-          open={this.state.showUploadForm}
-          closeButton={this.handleCloseUploadForm}
-          location={this.state.currentUploadMarker}/>
+          />
 
-        <PostLoadingIndicator
-          isLoading={this.props.loadingPost} />
+          <UploadformContainer
+            open={this.state.showUploadForm}
+            closeButton={this.handleCloseUploadForm}
+            location={this.state.currentUploadMarker}/>
 
+          <PostLoadingIndicator
+            isLoading={this.props.loadingPost} />
+
+          <Minimap
+            containerElement = {
+              <div style={{
+                  height: "250px",
+                  width: "100px",
+                  position: "absolute",
+                  bottom: "15px",
+                  left: "15px"
+                 }} />
+            }
+            mapElement = {
+              <div style={{ height: '100%', width: '100%' }} />
+            }
+            directions={this.state.directions}
+            />
+
+        </div>
         <Gallery
           className="col-7"
           current={this.props.currentGallery}
           handleDeletePhoto={this.props.handleDeletePhoto}
+          isAuthenticated={this.props.isAuthenticated}
           />
-
-        <Minimap
-          containerElement = {
-            <div style={{
-                height: "250px",
-                width: "100px",
-                position: "absolute",
-                bottom: "15px",
-                left: "15px"
-               }} />
-          }
-          mapElement = {
-            <div style={{ height: '100%', width: '100%' }} />
-          }
-          directions={this.state.directions}
-          />
-
-        <div className="container"
-          style={{width: '40px', position: 'fixed', right: '20px', "margin-top":"50px"}}>
-          <button onClick={this.moveTravelerUp}>Up</button>
-          <button onClick={this.moveTravelerDown}>Down</button>
-
-        </div>
       </div>
-
-
-    )
-  } else {
-    return <h1>Loading...</h1>
-  }
+      )
+    } else {
+      return <h1>Loading...</h1>
+    }
   }
 }
 //============ map interaction utils ============//
@@ -363,11 +347,11 @@ function getMarkersRequestApi(){
       });
   };
 }
+
 //============ photo api utils =============//
 function deletePhotoRequestApi(photoId){
   return (dispatch) => {
-    //TODO: add action for fetching request to state
-    dispatch({type:"delete_photo_temp"});
+
     axios({
       method: 'DELETE',
       url: '/api/images',
@@ -375,12 +359,8 @@ function deletePhotoRequestApi(photoId){
      })
     .then(response => {
       console.log(response)
-      if(response.status == 200){
-
-        Promise.all([
-          dispatch(actionCreators.deletePhoto(photoId)),
-          //dispatch(actionCreators.postMarkerSuccess())
-        ])
+      if(response.status === 200){
+        dispatch(actionCreators.deletePhoto(photoId))
       }
     })
     .catch(err => {
@@ -438,7 +418,13 @@ function mapStateToProps(state){
     currentMapIndex: state.data.get('currentMapIndex'),
 
     initStateLoaded: state.asyncInitialState.loaded,
-    initStateLoading: state.asyncInitialState.loading
+    initStateLoading: state.asyncInitialState.loading,
+
+    isAuthenticated: state.login.isAuthenticated,
+
+    uploading: state.data.get('uploading'),
+    uploadingSuccess: state.data.get('uploadingSuccess'),
+    uploadingProgress: state.data.get('uploadingProgress'),
   };
 
 }

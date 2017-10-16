@@ -1,8 +1,8 @@
 #dependency directory
-node_modules/
+/node_modules/
 
 #temp static file directory
-temp_image_dir
+/temp_image_dir/
 
 #misc
 .DS_Store

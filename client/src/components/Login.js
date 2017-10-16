@@ -20,12 +20,12 @@ class Login extends Component {
 
   storeEmail(username){
     this.setState({ username: username });
-    console.log(this.state);
+
   }
 
   storePassword(pw){
     this.setState({ password: pw });
-    console.log(this.state);
+
   }
 
   getLoginForm(){
@@ -43,10 +43,13 @@ class Login extends Component {
     const st = this.state.loginPhase;
     let toggleBtnLabel = st ? "Sign-up" : "Log-in" ;
     let currentBtnLabel = st ? "Log In" : "Sign Up" ;
+    //if(this.props.isAuthenticated) currentBtnLabel = "Login attempt failed";
     let status = st ? "Don't have ID? " : "Already a member? ";
+    //let auth = this.props.isAuthenticated;
+    if(this.props.isAuthenticated === false ){
     return (
 
-        <div className="login-form modal container">
+        <div className="login-form jumbotron container">
           <div className="row padding-15">
             <div className="col-8">
             <button type="button" className="close"
@@ -78,12 +81,9 @@ class Login extends Component {
             <br />
             <p>{status} <a onClick={this.togglePhase}>{toggleBtnLabel}</a></p>
             <button
-                onClick={
-
-                    (e) => this.state.loginPhase ?
+                onClick={(e) => this.state.loginPhase ?
                       this.props.loginRequest(this.getLoginForm()) :
                       this.props.signInRequest(this.getLoginForm())
-
                 }
                 className="btn-lg pull-right">{currentBtnLabel}</button>
 
@@ -91,25 +91,29 @@ class Login extends Component {
           </div>
         </div>
 
-    )
+      )
+    } else return null;
   }
+
 }
 
+//TODO: locate actions to actionCreators
 function loginRequestApi(input){
   return dispatch => {
-    console.log(typeof input)
-    //TODO: do dispatch action of starting request
-    //dispatch(actionCreators.startLogin)
+    //console.log(typeof input)
+
+    dispatch({type:'LOGIN_REQUEST'})
     axios.post('/auth/login', input)
       .then(response => {
         if(response.status === 200){
-          //TODO:
-          //dispatch(actionCreators.loginSuccess)
+
+          dispatch({type: 'LOGIN_SUCCESS'})
           console.log(response)
         }
       })
       .catch(err => {
         console.log(err);
+        dispatch({type: 'LOGIN_FAILURE'})
       });
 
   };
@@ -117,7 +121,6 @@ function loginRequestApi(input){
 
 function signInRequestApi(input){
   return dispatch => {
-    console.log(input);
     axios.post('/auth/signup', input)
       .then(response => {
         if(response.status === 200){
@@ -125,8 +128,9 @@ function signInRequestApi(input){
         }
       })
       .catch(err => {
-        console.log(err);
-      });
+        console.log(err)
+        //TODO: dispatch sigin failure
+      })
   }
 }
 
@@ -134,7 +138,6 @@ function mapDispatchToProps(dispatch){
   return {
     loginRequest: input => {
       dispatch(loginRequestApi(input))
-      //loginRequestApi(dispatch, input)
     },
     signInRequest: input => {
       dispatch(signInRequestApi(input))
@@ -142,12 +145,15 @@ function mapDispatchToProps(dispatch){
   }
 }
 
-function mapStateToProps(){
-
+function mapStateToProps(state){
+  return{
+    isFetching: state.login.isFetching,
+    isAuthenticated: state.login.isAuthenticated,
+  }
 }
 
 
 export const LoginContainer = connect(
   mapStateToProps,
   mapDispatchToProps
-)(Login);
+)(Login)

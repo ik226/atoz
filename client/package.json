@@ -5,9 +5,11 @@
   "proxy": "http://localhost:3001/",
   "dependencies": {
     "bootstrap": "^3.3.7",
+    "immutable": "^3.8.2",
     "react": "^15.6.1",
     "react-bootstrap": "^0.31.3",
     "react-dom": "^15.6.1",
+    "react-google-maps": "^8.3.5",
     "react-redux": "^5.0.6",
     "react-scripts": "1.0.12",
     "redux": "^3.7.2",

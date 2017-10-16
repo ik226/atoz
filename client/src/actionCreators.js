@@ -1,3 +1,4 @@
+
 export function addMarker(position, id){
   return {
     type: 'ADD_MARKER',
@@ -78,11 +79,11 @@ export function setInitialState(data){
 }
 
 //============ photo handlers ===============//
-export function addPhoto(markerId, photoId){
+export function addPhoto(markerId, photoIds){
   return{
     type: 'ADD_PHOTO',
     markerId,
-    photoId
+    photoIds
   }
 }
 

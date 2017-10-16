@@ -73,14 +73,21 @@ export const BroadwayMap = withGoogleMap(props => (
                   <InfoContent
                       hasPhotos={marker.get('hasPhotos')}
                       position={marker.get('position')}
-                      numPhotos={marker.get('photos').toArray().length}/>
-                  <button onClick= {() => props.handleButtonToRemoveMarker(id)}>
-                    Remove Marker
-                  </button>
-                  <button
-                    className="upload-button"
-                    onClick={() => props.openForm(marker)}
-                  >Upload Photo</button>
+                      numPhotos={marker.get('photos').toArray().length}
+                      markerId={id}/>
+
+                  {/*TODO: move buttons to InfoContent */}
+                  { props.isAuthenticated && (
+                    <div>
+                      <button onClick= {() => props.handleButtonToRemoveMarker(id)}>
+                        Remove Marker
+                      </button>
+                      <button
+                        className="upload-button"
+                        onClick={() => props.openForm(marker)}
+                      >Upload Photo</button>
+                    </div> )
+                  }
                 </div>
               </InfoWindow>
             )}

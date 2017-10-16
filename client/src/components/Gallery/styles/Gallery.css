@@ -4,13 +4,12 @@
   position: absolute;
   top: 100px;
   right: 20px;
-  //margin-left: 40px;
   width: 350px;
   height: 75vh;
   background-color: #ff0000;
   overflow-y: scroll;
-  //float: left;
   text-align: center;
+  color: white;
 }
 
 .gallery-no-post{
