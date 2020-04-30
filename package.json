@@ -8,7 +8,9 @@
     "server": "nodemon app.js",
     "client": "node start-client.js",
     "test": "mocha --reporter spec test --timeout 10000",
-    "test:watch": "npm run test -- --watch"
+    "test:watch": "npm run test -- --watch",
+    "snyk-protect": "snyk protect",
+    "prepublish": "npm run snyk-protect"
   },
   "keywords": [],
   "author": "",
@@ -27,12 +29,14 @@
     "node-uuid": "^1.4.8",
     "passport": "^0.4.0",
     "passport-local": "^1.0.0",
-    "uuid": "^3.1.0"
+    "uuid": "^3.1.0",
+    "snyk": "^1.316.1"
   },
   "devDependencies": {
     "chai-http": "^3.0.0",
     "concurrently": "^3.5.0",
     "morgan": "^1.8.2",
     "supertest": "^3.0.0"
-  }
+  },
+  "snyk": true
 }
